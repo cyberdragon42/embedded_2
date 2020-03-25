@@ -30,6 +30,7 @@ int str_index = 0;
 int main(void)
 {
 	InitializePeripherals();
+	InitializeDisplay();
 	while(1)
 	{
 		
@@ -100,17 +101,42 @@ void WriteByte(uint8_t data, int dataORcommand)
 		GPIO_SetBits(LCD_PORT, LCD_PIN_RS);
 	
   GPIO_ResetBits(LCD_PORT, LCD_PIN_EN);// E=0
-  GPIO_SetBits(LCD_PORT, ((data & 0x0F)) << LCD_PIN_OFFSET);// 0ldest halfbyte DB4…DB7
+	
+	// 0ldest halfbyte DB4…DB7
+	 if(((data>>7)&1)==1) GPIO_SetBits(LCD_PORT, LCD_PIN_D7);
+	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
+	
+		if(((data>>6)&1)==1) GPIO_SetBits(LCD_PORT, LCD_PIN_D6);
+	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
+	
+		if(((data>>5)&1)==1) GPIO_SetBits(LCD_PORT, LCD_PIN_D5);
+	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
+	
+		if(((data>>4)&1)==1) GPIO_SetBits(LCD_PORT, LCD_PIN_D4);
+	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
+	
   GPIO_SetBits(LCD_PORT, LCD_PIN_EN);// E=1
 	lcd_delay(1000);
   GPIO_ResetBits(LCD_PORT, LCD_PIN_EN);// E=0
 	GPIO_ResetBits(LCD_PORT, 0x0F<<LCD_PIN_OFFSET);
 	lcd_delay(1000);
-  GPIO_SetBits(LCD_PORT, (((data>>4) & 0x0F)) << LCD_PIN_OFFSET);// youngest halfbyte DB4…DB7
+	
+	// youngest halfbyte DB4…DB7
+		if(((data>>3)&1)==1) GPIO_SetBits(LCD_PORT, LCD_PIN_D7);
+	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
+	
+		if(((data>>2)&1)==1) GPIO_SetBits(LCD_PORT, LCD_PIN_D6);
+	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
+	
+		if(((data>>1)&1)==1) GPIO_SetBits(LCD_PORT, LCD_PIN_D5);
+	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
+	
+		if(((data>>0)&1)==1) GPIO_SetBits(LCD_PORT, LCD_PIN_D4);
+	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
+	
   GPIO_SetBits(LCD_PORT, LCD_PIN_EN);// E=1
 	lcd_delay(1000);
   GPIO_ResetBits(LCD_PORT, LCD_PIN_EN);// E=0
-	GPIO_ResetBits(LCD_PORT, 0x0F<<LCD_PIN_OFFSET);
 	lcd_delay(1000);
 }	
 
@@ -128,6 +154,11 @@ void WriteSymbol(char symbol)
    WriteByte(symbol,1);
 }
 
+void WriteCommand(char cmd)
+{
+   WriteByte(cmd,0);
+}
+
 void WriteString(char* str)
 {
 	  char *c;
@@ -142,23 +173,23 @@ void WriteString(char* str)
 void ClearDisplay()
 {
 	//send command 0x01
-	 WriteByte(0x01,0);
+	 WriteCommand(0x01);
 	 lcd_delay(1000);
 }
 
-void DisplayInit()
+void InitializeDisplay()
 {
-	WriteByte(0x20,0);
+	WriteCommand(0x20);
 	lcd_delay(1000);
-	WriteByte(0x28,0);
+	WriteCommand(0x28);
 	lcd_delay(1000);
-	WriteByte(0x28,0);
+	WriteCommand(0x28);
 	lcd_delay(1000);
-	WriteByte(0x0F,0);
+	WriteCommand(0x0F);
 	lcd_delay(1000);
-	WriteByte(0x01,0);
+	WriteCommand(0x01);
 	lcd_delay(1000);
-	WriteByte(0x06,0);
+	WriteCommand(0x06);
 }
 
 void lcd_delay(int p)
