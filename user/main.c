@@ -16,14 +16,6 @@
 #define   LCD_PIN_MASK    ((LCD_PIN_RS | LCD_PIN_EN | LCD_PIN_D7 | LCD_PIN_D6 | LCD_PIN_D5 | LCD_PIN_D4))
 #define 	LCD_PIN_OFFSET  12
 
-/*
-char message1[] = {'h','e','l','l','o'};
-char message2[] = {'w','o','r','l','d'};
-char message3[] = {'g','p','i','o','e'};
-char message4[] = {'e','m','b','e','d','d','e','d'};
-char message5[] = {'s','t','m','3','2','f','4','v','g'};
-*/
-
 char *strs[5] = {"hello", "world", "gpioe","embedded","stm32f4vg"};
 int str_index = 0;
 
@@ -77,15 +69,22 @@ void InitializePeripherals()
    GPIO_Init(GPIOA,&PORTA);
 	 
 	 //external interruption
-	 RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG,ENABLE);
-	 EXTI_InitTypeDef exti1;
-	 EXTI_StructInit(&exti1);
-   SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA,EXTI_PinSource0);
-   exti1.EXTI_Line = EXTI_Line0;
-   exti1.EXTI_LineCmd = ENABLE;
-   exti1.EXTI_Mode = EXTI_Mode_Interrupt;
-   exti1.EXTI_Trigger = EXTI_Trigger_Rising;
-   EXTI_Init(&exti1);
+	 	NVIC_InitTypeDef NVIC_InitStruct;
+	 	NVIC_InitStruct.NVIC_IRQChannel = EXTI10_IRQn;
+  	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x00;
+	  NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x00;
+	  NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+	  NVIC_Init(&NVIC_InitStruct);
+		
+	  RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG,ENABLE);
+	  EXTI_InitTypeDef exti1;
+	  EXTI_StructInit(&exti1);
+    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA,EXTI_PinSource0);
+    exti1.EXTI_Line = EXTI_Line0;
+    exti1.EXTI_LineCmd = ENABLE;
+    exti1.EXTI_Mode = EXTI_Mode_Interrupt;
+    exti1.EXTI_Trigger = EXTI_Trigger_Rising;
+    EXTI_Init(&exti1);
 
    NVIC_EnableIRQ(EXTI0_IRQn);
    __enable_irq();
