@@ -114,9 +114,13 @@ void WriteByte(uint8_t data, int dataORcommand)
 	lcd_delay(1000);
 }	
 
-void SetCursore()
+void SetCursore(uint8_t col, uint8_t row)
 {
-	 //to be continued
+ 	col |= 0x80;
+	if (row == 1) {
+     col += 0x40;
+	}
+ WriteByte(col, 0);
 }
 
 void WriteSymbol(char symbol)
