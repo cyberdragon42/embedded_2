@@ -481,6 +481,11 @@
               <FileType>5</FileType>
               <FilePath>.\user\main.h</FilePath>
             </File>
+            <File>
+              <FileName>misc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\user\misc.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

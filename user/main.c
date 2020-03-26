@@ -4,6 +4,7 @@
 #include "stm32f4xx_syscfg.h"
 #include "stm32f4xx_exti.h"
 #include "main.h"
+#include "misc.h"
 
 #define 	LCD_PORT				 GPIOE
 #define   LCD_PIN_RS       GPIO_Pin_7  
@@ -70,7 +71,7 @@ void InitializePeripherals()
 	 
 	 //external interruption
 	 	NVIC_InitTypeDef NVIC_InitStruct;
-	 	NVIC_InitStruct.NVIC_IRQChannel = EXTI10_IRQn;
+	 	NVIC_InitStruct.NVIC_IRQChannel = EXTI0_IRQn;
   	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x00;
 	  NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x00;
 	  NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
@@ -90,7 +91,6 @@ void InitializePeripherals()
    __enable_irq();
 }
 	
-	
 //write byte
 void WriteByte(uint8_t data, int dataORcommand)
 {
@@ -106,13 +106,13 @@ void WriteByte(uint8_t data, int dataORcommand)
 	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
 	
 		if(((data>>6)&1)==1) GPIO_SetBits(LCD_PORT, LCD_PIN_D6);
-	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
+	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D6);
 	
 		if(((data>>5)&1)==1) GPIO_SetBits(LCD_PORT, LCD_PIN_D5);
-	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
+	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D5);
 	
 		if(((data>>4)&1)==1) GPIO_SetBits(LCD_PORT, LCD_PIN_D4);
-	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
+	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D4);
 	
   GPIO_SetBits(LCD_PORT, LCD_PIN_EN);// E=1
 	lcd_delay(1000);
@@ -125,13 +125,13 @@ void WriteByte(uint8_t data, int dataORcommand)
 	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
 	
 		if(((data>>2)&1)==1) GPIO_SetBits(LCD_PORT, LCD_PIN_D6);
-	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
+	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D6);
 	
 		if(((data>>1)&1)==1) GPIO_SetBits(LCD_PORT, LCD_PIN_D5);
-	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
+	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D5);
 	
 		if(((data>>0)&1)==1) GPIO_SetBits(LCD_PORT, LCD_PIN_D4);
-	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D7);
+	else GPIO_ResetBits(LCD_PORT, LCD_PIN_D4);
 	
   GPIO_SetBits(LCD_PORT, LCD_PIN_EN);// E=1
 	lcd_delay(1000);
